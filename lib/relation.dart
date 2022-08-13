@@ -24,6 +24,29 @@ class _relationState extends State<relation> {
   late String result;
   _relationState(this.s1, this.s2, this.result);
   final controller = ScreenshotController();
+
+  Future<Null> asyncfun() async {
+    final image = await controller.captureFromWidget(buildimage());
+
+    if (image == null) return;
+
+    await saveImage(image);
+    final snackBar = await SnackBar(
+        content: Row(
+      children: [
+        Icon(
+          Icons.download,
+          color: Colors.white,
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Text('Image downloaded'),
+      ],
+    ));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Screenshot(
@@ -56,19 +79,19 @@ class _relationState extends State<relation> {
             buildimage(),
             GestureDetector(
               onTap: () async {
+              
+               final snackBar =  await SnackBar(content: Row(children: [
+                          Icon(Icons.download , color: Colors.white,),
+                            SizedBox(width: 20,),
+                              Text('Image downloaded'),
+                          ],));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar); print('download');
                 final image = await controller.captureFromWidget(buildimage());
 
                 if (image == null) return;
 
                 await saveImage(image);
-                //  await AlertDialog(
-                //   title: Text("Image Downloaded"),
-                //   content: Text("Check image in Gallery"),
-                //   actions: [
-                //     okbutton(context)
-                //   ],
-                // );
-                Alert(message: 'ok', shortDuration: true).show();
+                
               },
               child: Text('Click here to download',
                   style: TextStyle(
